@@ -1,0 +1,38 @@
+{
+  "name": "@diff./shardable-uuid",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "mocha test",
+    "lint": "eslint . --ext .ts",
+    "build": "tsc",
+    "deploy": "tsc; npm publish --access public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diff-dot/task-manager"
+  },
+  "author": "DIFF.",
+  "license": "ISC",
+  "dependencies": {
+    "@diff./redis-client": "^2.0.15"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.7",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^13.7.7",
+    "@typescript-eslint/eslint-plugin": "^2.12.0",
+    "@typescript-eslint/parser": "^1.13.0",
+    "@typescript-eslint/typescript-estree": "^1.13.0",
+    "chai": "^4.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-no-null": "^1.0.2",
+    "eslint-plugin-prettier": "^3.1.2",
+    "mocha": "^6.2.2",
+    "prettier": "^1.19.1",
+    "typescript": "^3.7.3"
+  }
+}
