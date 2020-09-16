@@ -4,9 +4,9 @@ import { RedisClient, RedisClusterOptions, RedisHostOptions } from '@diff./redis
  * @todo 성능 개선을 목적으로 네이티브 모듈로 변경필요
  */
 export class ShardableUUID {
-  private static readonly DATA_BIT = 62;
-  private static readonly DATA_HEAD_BIT = 11;
-  private static readonly SHARD_BIT = 10;
+  private static readonly DATA_BIT = 62; // 데이터가 포함된 영역의 비트
+  private static readonly DATA_HEAD_BIT = 11; // mixbix 에서 제외할 (이미 난수성을 가진)데이터의 앞쪽 비트
+  private static readonly SHARD_BIT = 10; // 샤드 슬롯 정보를 표시하는데 사용되는 비트
   private static readonly SHARD_SLOT = 1024; // 10bit, 0 ~ 1023, 샤드 슬롯 개수
   private static readonly MAX_SEQ = 127; // 7bit, 0~127
   private static readonly MAX_TYPE = 1023; // 10bit, 0 ~ 1023, 사용할 수 있는 최대 타입 개수
