@@ -1,4 +1,6 @@
 import { RedisClient, RedisClusterOptions, RedisHostOptions } from '@diff./redis-client';
+import { GenerateResult } from './type/GenerateResult';
+import { ParseResult } from './type/ParseResult';
 
 /**
  * @todo 성능 개선을 목적으로 네이티브 모듈로 변경필요
@@ -16,14 +18,10 @@ export class ShardableUUID {
 
   constructor(args: { redisOptions: RedisClusterOptions | RedisHostOptions; shardingHint?: () => number }) {
     this.redisOptions = args.redisOptions;
-    this.shardingHint = args.shardingHint
-      ? args.shardingHint
-      : () => {
-          return Math.floor(Math.random() * ShardableUUID.SHARD_SLOT);
-        };
+    this.shardingHint = args.shardingHint ? args.shardingHint : () => Math.floor(Math.random() * ShardableUUID.SHARD_SLOT);
   }
 
-  public async generate(type: number): Promise<{ uuid: string; shard: number; sec: number; msec: number; seq: number }> {
+  public async generate(type: number): Promise<GenerateResult> {
     if (type > ShardableUUID.MAX_TYPE) throw new RangeError(`Type must be less than ${ShardableUUID.MAX_TYPE}`);
 
     const shard = this.shardingHint() % ShardableUUID.SHARD_SLOT;
@@ -62,7 +60,7 @@ export class ShardableUUID {
   /**
    * BigInt 또는 Base64 문자열로 구성된 UUID 를 파싱
    */
-  public parse(uuid: bigint | string): { type: number; shard: number; sec: number; msec: number; seq: number } {
+  public parse(uuid: bigint | string): ParseResult {
     let source: bigint;
     if (typeof uuid === 'bigint') {
       source = BigInt(uuid);
@@ -70,7 +68,9 @@ export class ShardableUUID {
       source = this.decodeBase64UrlSafe(uuid);
     }
 
-    let { data: buffer, shard } = this.unmixbit(source);
+    const unbitData = this.unmixbit(source);
+    let buffer = unbitData.data;
+    const shard = unbitData.shard;
 
     const seq = Number(buffer & BigInt(127));
     buffer = buffer >> BigInt(7);
